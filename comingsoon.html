@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <style>
+    /* Reset */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #181818;
+      overflow: hidden;
+    }
+
+    /* Coming Soon Content */
+    .coming-soon-content {
+      text-align: center;
+      color: white;
+      display: block;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    .coming-soon-message {
+      font-size: 2.5rem;
+      margin-top: 20px;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    /* Icon Animation */
+    .coming-soon-icon {
+      font-size: 80px;
+      color: #ff5f6d;
+      margin-top: 50px;
+      animation: bounce 1.5s infinite alternate;
+    }
+
+    /* Animation for the Icon */
+    @keyframes bounce {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* Fade-In Animation for Message */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Glowing effect for message */
+    .coming-soon-message span {
+      color: #ff5f6d;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 5px #ff5f6d, 0 0 10px #ff5f6d, 0 0 15px #ff5f6d, 0 0 20px #ff5f6d;
+      }
+      100% {
+        text-shadow: 0 0 15px #ff5f6d, 0 0 30px #ff5f6d, 0 0 45px #ff5f6d, 0 0 60px #ff5f6d;
+      }
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .coming-soon-message {
+        font-size: 1.5rem;
+      }
+
+      .coming-soon-icon {
+        font-size: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Coming Soon Content -->
+  <div class="coming-soon-content">
+    <div class="coming-soon-icon">⏳</div>
+    <div class="coming-soon-message">
+      <span>Coming Soon</span><br>Stay Tuned for Updates!
+    </div>
+  </div>
+</body>
+</html>

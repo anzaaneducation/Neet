@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anzaan Education</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom animations for borders */
+    .border-animate {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .border-animate::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, #34d399, #3b82f6, #34d399);
+      animation: slide-border 2s linear infinite;
+      z-index: -1;
+    }
+
+    .border-animate:hover::before {
+      left: 0;
+    }
+
+    @keyframes slide-border {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 0%;
+      }
+    }
+
+    /* Expandable submenu transition */
+    .submenu {
+      display: none;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .submenu.active {
+      display: block;
+    }
+
+    /* Smooth paragraph fade-in */
+    .paragraph {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .paragraph.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+
+    
+        /* Centered Logo */
+        .logo-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ffdd;
+            margin: auto;
+        }
+  </style>
+</head>
+
+<div class="logo-container">
+  <img class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjXC5962ixatsefNUwibc6_TLz2WXZqsGCke4jal1EOSxUTP3iZGpF_FQ5vFD5a1hbZ8F-rjL0vqbixboc9jtoFy4RSXScxeUt6Kgl7wlDJ6iazyVisQ5av6JpNRHN-kX1n_U-rjsyfy_2oLAIxfgZhvfaEcY1U1rTCXrBOiJfVXSC48MMpG4pGMDnC93ru/s3500/Logo%20Name.jpg"
+      alt="Logo">
+ 
+  <div class="decorative-line"></div>
+</div>
+
+
+<body class="bg-gradient-to-br from-gray-50 to-gray-200 text-gray-800 min-h-screen flex flex-col items-center p-6">
+  <!-- Header Section -->
+  <div class="text-center mt-10">
+    <h1 class="text-4xl font-extrabold text-green-600">Anzaan Education</h1>
+    <p class="text-lg italic text-gray-500 mt-2">Direct In Your Mind</p>
+    <div class="w-92 mx-auto mt-4 border-t-4 border-red-600"></div>
+  </div>
+
+  <!-- Buttons Section -->
+  <div class="mt-10 w-full max-w-2xl space-y-8">
+    <!-- Button 1 -->
+
+ 
+ <div class="button-wrapper">
+  <button
+    class="w-full py-3 text-lg font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-lg border-animate shadow-xl transition"
+    onclick="toggleSubmenu('mixed-test-submenu')">
+    Mixed Topic Test
+  </button>
+  <div id="mixed-test-submenu" class="submenu mt-4 px-6">
+    <p class="paragraph text-gray-700 leading-relaxed">
+     Topic:-  Animal Kingdom, Structural Organization in Animals
+    
+    </p>
+    <button class="mt-4 px-6 py-2 bg-blue-500 text-white font-medium rounded-lg shadow-lg hover:bg-blue-600 transition">
+         <a href="zoologytest-1.html">Start Test </a>
+    </button>
+  </div>
+</div>
+
+
+<!-- Button 2 -->
+    <div class="button-wrapper">
+      <button
+        class="w-full py-3 text-lg font-semibold text-white bg-green-500 hover:bg-green-600 rounded-lg border-animate shadow-xl transition"
+        onclick="toggleSubmenu('pyq-submenu')">
+        Topic Wise MCQ [Coming Soon...]
+      </button>
+      <div id="pyq-submenu" class="submenu mt-4 px-6">
+        <p class="paragraph text-gray-700 leading-relaxed">
+        </p>
+        <button  class="mt-4 px-6 py-2 bg-green-500 text-white font-medium rounded-lg shadow-lg hover:bg-green-600 transition" > 
+          <a href=" #">Start Test </a>
+        </button>
+      </div>
+    </div>
+
+   
+
+    <!-- Button 3 -->
+    <div class="button-wrapper">
+      <button
+        class="w-full py-3 text-lg font-semibold text-white bg-purple-500 hover:bg-purple-600 rounded-lg border-animate shadow-xl transition"
+        onclick="toggleSubmenu('syllabus-submenu')">
+        Full Syllabus[Coming Soon...]
+      </button>
+      <div id="syllabus-submenu" class="submenu mt-4 px-6">
+        <p class="paragraph text-gray-700 leading-relaxed">
+          
+        </p>
+        <button class="mt-4 px-6 py-2 bg-purple-500 text-white font-medium rounded-lg shadow-lg hover:bg-purple-600 transition">
+             <a href="#">Start Test </a>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle submenu and paragraph visibility
+    function toggleSubmenu(id) {
+      const submenu = document.getElementById(id);
+      const paragraph = submenu.querySelector(".paragraph");
+      const isActive = submenu.classList.contains("active");
+
+      // Close all other submenus
+      document.querySelectorAll(".submenu").forEach((el) => {
+        el.classList.remove("active");
+        const para = el.querySelector(".paragraph");
+        if (para) para.classList.remove("visible");
+      });
+
+      // Toggle current submenu
+      if (!isActive) {
+        submenu.classList.add("active");
+        setTimeout(() => paragraph.classList.add("visible"), 100); // Smooth paragraph fade-in
+      }
+    }
+  </script>
+</body>
+</html>

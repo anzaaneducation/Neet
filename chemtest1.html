@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>physics Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px #aaa;
+        }
+        h2 {
+            text-align: center;
+            color: #34495e;
+        }
+        .decorative-line {
+            border-top: 4px solid #2ecc71;
+            margin: 20px 0;
+        }
+        .info {
+            margin: 10px 0 20px 10px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .result {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+        }
+        .retry-btn {
+            display: none;
+            text-align: center;
+        }
+        button.retry, button.view-solution {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 6px #888;
+            cursor: pointer;
+        }
+        button.retry:hover, button.view-solution:hover {
+            background-color: #2980b9;
+        }
+        .question-block {
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid #95a5a6;
+            border-radius: 10px;
+            background-color: #ecf0f1;
+            max-width: 800px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .question-image {
+            margin: 10px 0;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 5px 0;
+        }
+        .options li.correct {
+            background-color: #ecf0f1;
+        }
+        .options li.wrong {
+            background-color: #e74c3c;
+        }
+       .submit-btn {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 6px #888;
+  z-index: 1;
+}
+
+.submit-btn:hover {
+  background-color: #1e8449;
+}
+
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+        .popup-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 10000;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #34495e;
+            color: white;
+        }
+        .popup-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Chemistry Test</h1>
+    <h2>Best Of Luck</h2>
+    <div class="decorative-line"></div>
+    <div class="info" id="total-marks">Total Marks: <span id="total-marks-value">0</span></div>
+    <div class="result" id="result-section">Result: <span id="result-marks"></span></div>
+    <div class="retry-btn">
+        <button class="retry" onclick="retryTest()">Retry</button>
+        <button class="view-solution" onclick="viewSolution()">View Solution</button>
+    </div>
+    <div class="decorative-line"></div>
+
+    <!-- Questions will be dynamically injected here -->
+    <div id="questions-section"></div>
+
+    <!-- Submit Button -->
+    <button class="submit-btn" onclick="submitTest()">Submit</button>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <span>Solution</span>
+                <button onclick="closePopup()">✖</button>
+            </div>
+            <iframe class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+
+
+    <script>
+        const questions = [
+            
+       {
+        "text": "Newland’s law of octaves seemed to be true only upto the element having electronic configuration:",
+        "options": [
+            "1. [Ar] 4s²",
+            "2. [Ne] 3s¹",
+            "3. [Ar] 4s¹",
+            "4. [Ne] 4s² 4p³"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Eka-aluminium and Eka silicon elements are prediction of Mendeleev. Where he did give the gap in periodic table respectively:",
+        "options": [
+            "1. under aluminium and above silicon",
+            "2. above aluminium and above silicon",
+            "3. above aluminium and under silicon",
+            "4. under aluminium and under silicon"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Moseley plotted a graph between √ν (frequency) vs atomic number, the result was a:",
+        "options": [
+            "1. straight line",
+            "2. hyperbola",
+            "3. parabola",
+            "4. constant line"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Total number of elements of 6th and 7th period which have been placed outside the periodic table:",
+        "options": [
+            "1. 32",
+            "2. 18",
+            "3. 14",
+            "4. 28"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "The ionic radii (in A) of N³⁻, O²⁻ and F⁻ are respectively:",
+        "options": [
+            "1. 1.36, 1.40 and 1.71",
+            "2. 1.36, 1.71 and 1.40",
+            "3. 1.71, 1.40 and 1.36",
+            "4. 1.36, 1.71 and 1.40"
+        ],
+        "correct": 3,
+        "images": []
+    },
+  {
+        "text": "Arrange the given elements in the correct order of their 2nd ionisation enthalpy:",
+        "options": [
+            "1. Na < Al < S < P < Si",
+            "2. Si < Al < P < S < Na",
+            "3. Na < Si < P < S < Al",
+            "4. Si < Al < S < P < Na"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Which of the following is correct for actinoids:",
+        "options": [
+            "1. Actinoids are after At. No. 89 upto At. No. 103",
+            "2. These belong to 7th period",
+            "3. 5f subshell is the main for receiving the last electron",
+            "4. All"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Of the following iso-electronic ions, the one which has the highest ionisation potential is:",
+        "options": [
+            "1. F-",
+            "2. Mg2+",
+            "3. Na+",
+            "4. N3-"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "4th period has 18 elements because filling of:",
+        "options": [
+            "1. 3d 3p 3d",
+            "2. 3d 4s 4p",
+            "3. 4s 3d 4p",
+            "4. 4s 4d"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Representative elements are:",
+        "options": [
+            "1. s-block elements",
+            "2. p-block elements",
+            "3. s and p-block elements",
+            "4. d-block elements"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Consider the order O2- < F- < Na+ < Mg2+ the incorrect statement is:",
+        "options": [
+            "1. Increasing order of Zeff.",
+            "2. Increasing order of I.E.",
+            "3. Increasing order of size",
+            "4. Increasing Electronegativity"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Elements after uranium are called:",
+        "options": [
+            "1. Actinum",
+            "2. Uranium elements",
+            "3. Transuranium elements",
+            "4. None"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Among Si, Mg, Na and P; most metallic is:",
+        "options": [
+            "1. Si",
+            "2. P",
+            "3. Na",
+            "4. Mg"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Which of the following option is incorrect:",
+        "options": [
+            "1. On moving left to right in a period, electronegativity value increases",
+            "2. On moving left to right in a period, ionisation enthalpy increases",
+            "3. On moving left to right in a period, Electronegativity value decreases",
+            "4. None of these"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Among Li, Na, B and Be, which having highest metallic radius:",
+        "options": [
+            "1. Li",
+            "2. Na",
+            "3. B",
+            "4. Be"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Li shows similarities with:",
+        "options": [
+            "1. Mg",
+            "2. Al",
+            "3. Si",
+            "4. Cl"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Electron affinity of H is equal to:",
+        "options": [
+            "1. C",
+            "2. Mg",
+            "3. Cl",
+            "4. O"
+        ],
+        "correct": 2,
+        "images": []
+    },
+ {
+        "text": "The correct order of electron affinity of B, C, N, O is:",
+        "options": [
+            "1. O > C > N > B",
+            "2. O > N > C > B",
+            "3. B > N > C > O",
+            "4. O > B > C > N"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "The element having very high ionization enthalpy but zero electron affinity is:",
+        "options": [
+            "1. F",
+            "2. Ne",
+            "3. Na",
+            "4. Be"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "The IUPAC name of atomic number 115 is:",
+        "options": [
+            "1. Ununhexium",
+            "2. Ununpentium",
+            "3. Ununseptium",
+            "4. None of these"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Atomic number 114 is related to which family:",
+        "options": [
+            "1. N family",
+            "2. O family",
+            "3. C family",
+            "4. Halogen"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Amphoteric oxides behaves as:",
+        "options": [
+            "1. Only acidic",
+            "2. Only basic",
+            "3. Both (1) and (2)",
+            "4. None of these"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "The correct order of screening effect is:",
+        "options": [
+            "1. s > d > p > f",
+            "2. s > p > d > f",
+            "3. f > d > p > s",
+            "4. p > s > d > f"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Among Li, Na, Br and I, which has least atomic radius:",
+        "options": [
+            "1. Li",
+            "2. Na",
+            "3. Br",
+            "4. I"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Which of the following is not correct for Isoelectronic ions: \n(i) They have the same number of electrons around their nuclei. \n(ii) Higher the atomic number higher will be positive charge in a series of isoelectronic ions of same period. \n(iii) An isoelectronic series may have both positively and negatively charged ions. \n(iv) Isoelectronic ions have same electric charge.",
+        "options": [
+            "1. (i)",
+            "2. (ii)",
+            "3. (iii)",
+            "4. (iv)"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Electronic configurations of some element are given in column I and their electron gain enthalpies are given in column II. Match the electronic configuration with electron gain enthalpy:",
+        "options": [
+            "1. (a) 1 - A, 2 - B, 3 - C, 4 - D",
+            "2. (b) 1 - B, 2 - C, 3 - D, 4 - A",
+            "3. (c) 1 - C, 2 - D, 3 - A, 4 - B",
+            "4. (d) 1 - D, 2 - A, 3 - B, 4 - C"
+        ],
+        "correct": 1,
+        "images": [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5yzoGuumGVWtZIxpou0q_so3_zRAoeFlEDnm1vnea7uMg1xVZ9ddNm9j5Pm7TgMCZ2YgrwZj1sCWpFbINo0MzMIKZ4ytlsRuarOM2eOLJc-ZJ_0GI5s9VPnWrlcNygpSlgsyTdeO0IubbUdSoPGOp00RyjkZHwmxxEldN2CXOCPqcTl_LpLcD5QjxT1J7/s344/80image.PNG"
+        ]
+    },
+    {
+        "text": "The successive ionization energies for element X is given below: \nIE1: 250 kJ mol⁻¹ \nIE2: 820 kJ mol⁻¹ \nIE3: 1190 kJ mol⁻¹ \nIE4: 1490 kJ mol⁻¹ \nFind out the number of valence electrons for the element X:",
+        "options": [
+            "1. 1",
+            "2. 2",
+            "3. 3",
+            "4. 4"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Which of the following oxide is expected to react readily with NaOH?",
+        "options": [
+            "1. Na₂O",
+            "2. CO₂",
+            "3. CaO",
+            "4. Cl₂O₇"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Identify the incorrect match:",
+        "options": [
+            "1. A-(i)",
+            "2. B-(ii)",
+            "3. C-(iii)",
+            "4. D-(iv)"
+        ],
+        "correct": 4,
+        "images": [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh7CMM1cao0im2RcxbgIJKmfTQ653X-yjxtpbEM-8Z1pvyYzQCJhhnphrM0nD1bKGHQkn_ykQCnRCvbeMsryy152RMZzJ5MMznW_q6ycwmXFgDVZJYamvLJoVVZVekI8gKijmDNSGT0cB0KksKjEcRwIVm-YAh-OMyryU-KXCr_Mxvhcjccl7HHjXSKkTJ0/s357/75image.PNG"
+        ]
+    },
+    {
+        "text": "Which is incorrect match about nature of oxide:",
+        "options": [
+            "1. a-i",
+            "2. b-ii",
+            "3. c-iii",
+            "4. d-iv"
+        ],
+        "correct": 3,
+        "images": [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjTCaFcTUbSW_MQuf0TMV6iCVmM_ydQkFiUExml427x_sNwhDS2Uu2e4CcCsSviJ6SGxbbv7EFhWEWRlo1azQnkvqDsetD1a6cA81I00DLtUUJMVbK9wI1ysM_MziMz_MqhVjLkSFUZf0UegJ9uukgnQ1xGFgSOesDA1gk35a24ym9D8Z74oaADzcL92XbW/s179/5%2067%20image.PNG"
+        ]
+    },
+    {
+        "text": "Given below are two statements:\n\nStatement I: N has more electronegative value than O.\nStatement II: Lanthanoids belong to the 5f series.\n\nIn the light of the above statements, choose the most appropriate answer from the options given below:",
+        "options": [
+            "1. Both Statement I and Statement II are incorrect",
+            "2. Statement I is correct but Statement II is incorrect",
+            "3. Statement I is incorrect but Statement II is correct",
+            "4. Both Statement I and Statement II are correct"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Be has higher ionisation enthalpy than B. This can be explained as:",
+        "options": [
+            "1. Be has higher size than B, hence its ionisation enthalpy is higher.",
+            "2. Penetration of 2p-electrons to the nucleus is more than the 2s electrons.",
+            "3. It is easier to remove an electron from the 2p-orbital as compared to the 2s orbital due to more penetration of s electrons.",
+            "4. Ionisation energy increases in a period."
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Given below are two statements. One is labelled as Assertion (A) and the other is labelled as Reason (R):\n\n**Assertion (A):** The first ionization enthalpy for oxygen is lower than that of nitrogen.\n\n**Reason (R):** The four electrons in 2p orbitals of oxygen experience more electron-electron repulsion.\n\nIn the light of the above statements, choose the correct answer from the options given below:",
+        "options": [
+            "1. Both (A) and (R) are correct and (R) is the correct explanation of (A)",
+            "2. Both (A) and (R) are correct but (R) is NOT the correct explanation of (A)",
+            "3. (A) is correct but (R) is not correct",
+            "4. (A) is not correct but (R) is correct"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Among the following, the basic oxide is:",
+        "options": [
+            "1. SO3",
+            "2. SiO2",
+            "3. CaO",
+            "4. Al2O3"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "The correct order of increasing ionic radii is:",
+        "options": [
+            "1. Mg2+ < Na+ < F⁻ < O²⁻ < N³⁻",
+            "2. N³⁻ < O²⁻ < F⁻ < Na+ < Mg2+",
+            "3. F⁻ < Na+ < O²⁻ < Mg²⁺ < N³⁻",
+            "4. Na+ < F⁻ < Mg²⁺ < O²⁻ < N³⁻"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "Element 'E' belongs to period 4 and group 16 of the periodic table. The valence shell electron configuration of the element just above 'E' in the group is:",
+        "options": [
+            "1. 3s², 3p⁴",
+            "2. 3d¹⁰, 4s², 4p⁴",
+            "3. 4d¹⁰, 5s², 2p⁴",
+            "4. 2s², 2p⁴"
+        ],
+        "correct": 1,
+        "images": []
+    },
+    {
+        "text": "The process that is NOT endothermic in nature is:",
+        "options": [
+            "1. Ar(g) + e⁻ → Ar⁻(g)",
+            "2. H(g) + e⁻ → H⁻(g)",
+            "3. O⁻(g) + e⁻ → O²⁻(g)",
+            "4. Na(g) → Na⁺(g) + e⁻"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Three elements X, Y and Z are in the 3rd period of the periodic table. The oxides of X, Y and Z, respectively, are basic, amphoteric, and acidic. The correct order of the atomic numbers of X, Y, and Z is:",
+        "options": [
+            "1. Z < Y < X",
+            "2. X < Y < Z",
+            "3. X < Z < Y",
+            "4. Y < X < Z"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "The element having the greatest difference between its first and second ionization energies is:",
+        "options": [
+            "1. Ca",
+            "2. Sc",
+            "3. Ba",
+            "4. K"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Elements of which of the following groups will form anions most readily:",
+        "options": [
+            "1. Oxygen family",
+            "2. Nitrogen family",
+            "3. Halogens",
+            "4. Alkali metals"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Match the element in column I with that in column II.",
+        "options": [
+            "1. (A)-(i), (B)-(ii), (C)-(iii), (D)-(iv)",
+            "2. (A)-(ii), (B)-(iv), (C)-(i), (D)-(iii)",
+            "3. (A)-(ii), (B)-(i), (C)-(iv), (D)-(iii)",
+            "4. (A)-(iv), (B)-(iii), (C)-(i), (D)-(ii)"
+        ],
+        "correct": 3,
+        "images": ["https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgzUyFEXqxMNIfQEifsTdpFGQcGLQOLEHdZsX5cyQ2Tr63GxPGohWZAZ_OB6hjOV-BUuQtoE0zNxWy5orM06q0FEjArK5v7_4FJJPfSF5ljAcqlRZQcI776l5V4yi3ghRO89O3FThoENAPYz8JGTHFr2j02RkLQoNPVCD_Dpp9FE4WRGis16epIPuDMLqvS/s342/91image.PNG"]
+    },
+    {
+        "text": "An atom has electronic configuration 1s² 2s² 2p⁶ 3s² 3p⁶ 3d³ 4s². You will place it in which group?",
+        "options": [
+            "1. Fifth",
+            "2. Fifteenth",
+            "3. Second",
+            "4. Third"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Which one is the correct order of the size of iodine species?",
+        "options": [
+            "1. I > I⁺ > I⁻",
+            "2. I > I⁻ > I⁺",
+            "3. I⁺ > I⁻ > I",
+            "4. I⁻ > I > I⁺"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "Electronic configuration of calcium atom can be written as:",
+        "options": [
+            "1. [Ne], 4p²",
+            "2. [Ar], 4s²",
+            "3. [Ne], 4s²",
+            "4. [Kr], 4p²"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "The zero group members are collectively known as:",
+        "options": [
+            "1. Inert gases",
+            "2. Rare gases",
+            "3. Noble gases",
+            "4. All of these"
+        ],
+        "correct": 4,
+        "images": []
+    },
+    {
+        "text": "The outermost electronic configuration of group 15 or VA elements is:",
+        "options": [
+            "1. ns² np¹",
+            "2. ns² np²",
+            "3. ns² np³",
+            "4. ns² np⁴"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "The element with strong electropositive nature is:",
+        "options": [
+            "1. Cu",
+            "2. Cs",
+            "3. Cr",
+            "4. Ba"
+        ],
+        "correct": 2,
+        "images": []
+    },
+    {
+        "text": "Which of the following is a false statement?",
+        "options": [
+            "1. Fluorine is more electronegative than chlorine",
+            "2. Nitrogen has greater IE₁ than oxygen",
+            "3. Lithium is amphoteric",
+            "4. Chlorine is an oxidizing agent"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Variable oxidation state and degenerated orbital shows:",
+        "options": [
+            "1. s-block elements",
+            "2. p-block elements",
+            "3. d-block elements",
+            "4. All of these"
+        ],
+        "correct": 3,
+        "images": []
+    },
+    {
+        "text": "Which of the following is a metalloid:",
+        "options": [
+            "1. Sb",
+            "2. Mg",
+            "3. Zn",
+            "4. Bi"
+        ],
+        "correct": 1,
+        "images": []
+    }
+
+        ];
+
+        const questionsSection = document.getElementById("questions-section");
+
+    function loadQuestions() {
+      let totalMarks = questions.length * 4;
+      document.getElementById("total-marks-value").innerText = totalMarks;
+
+      questions.forEach((q, index) => {
+        const questionBlock = document.createElement("div");
+        questionBlock.className = "question-block";
+
+        const questionText = document.createElement("p");
+        questionText.className = "question-text";
+        questionText.innerText = `${index + 1}. ${q.text}`;
+
+        questionBlock.appendChild(questionText);
+
+        q.images.forEach((imageSrc) => {
+          const questionImage = document.createElement("img");
+          questionImage.className = "question-image";
+          questionImage.src = imageSrc;
+          questionBlock.appendChild(questionImage);
+        });
+
+        const optionsList = document.createElement("ul");
+        optionsList.className = "options";
+
+        q.options.forEach((option, i) => {
+          const optionItem = document.createElement("li");
+          optionItem.innerHTML = `
+                        <input type="radio" name="q${index}" value="${i + 1}">
+                        ${option}
+                    `;
+          optionsList.appendChild(optionItem);
+        });
+
+        questionBlock.appendChild(optionsList);
+        questionsSection.appendChild(questionBlock);
+      });
+    }
+    function submitTest() {
+    const questionBlocks = document.querySelectorAll(".question-block");
+    let correct = 0, wrong = 0, answered = 0;
+
+    questionBlocks.forEach((block, index) => {
+        const correctAnswer = questions[index].correct;
+        const selectedOption = block.querySelector(`input[name="q${index}"]:checked`);
+        const optionsList = block.querySelectorAll(".options li");
+
+        // Highlight correct and incorrect options
+        optionsList.forEach((option, i) => {
+            if (i + 1 === correctAnswer) {
+                option.classList.add("correct");
+            }
+        });
+
+        if (selectedOption) {
+            answered++; // Count only the answered questions
+            if (parseInt(selectedOption.value, 10) !== correctAnswer) {
+                optionsList[parseInt(selectedOption.value, 10) - 1].classList.add("wrong");
+                wrong++;
+            } else {
+                correct++;
+            }
+        }
+    });
+
+    // Calculate result based on the total marks
+    const resultMarks = (correct * 4) + (wrong * -1); // Adjust scoring logic
+    const totalMarks = questions.length * 4; // Total marks for all questions
+    const percentage = ((resultMarks / totalMarks) * 100).toFixed(2); // Percentage based on total marks
+
+    // Ensure negative marks do not cause percentage to go below 0
+    const adjustedPercentage = Math.max(0, percentage);
+
+    // Update Result Display
+    document.getElementById("result-marks").innerHTML = `${resultMarks} (${adjustedPercentage}%)`;
+    document.getElementById("result-section").style.display = "block";
+    document.querySelector(".retry-btn").style.display = "block";
+}
+
+
+    function retryTest() {
+      window.location.reload();
+    }
+
+    function viewSolution() {
+      const popup = document.getElementById("popup");
+      const iframe = popup.querySelector("iframe");
+      iframe.src = "https://anzaaneducation.blogspot.com/2024/11/Physics%20MCQ%20For%20NEET%202025.html";
+      popup.style.display = "block";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    loadQuestions();
+
+
+
+
+
+
+
+
+
+document.querySelector(".submit-btn").addEventListener("click", function(event) {
+  event.preventDefault();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+});
+
+
+
+    </script>
+
+
+
+</body>
+</html>
