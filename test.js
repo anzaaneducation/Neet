@@ -81,12 +81,6 @@ function retryTest() {
     window.location.reload();
 }
 
-function viewSolution() {
-    const popup = document.getElementById("popup");
-    const iframe = popup.querySelector("iframe");
-    iframe.src = "https://anzaaneducation.blogspot.com/2024/11/Physics%20MCQ%20For%20NEET%202025.html";
-    popup.style.display = "block";
-}
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
