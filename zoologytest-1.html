@@ -98,7 +98,7 @@
     }
 
     .options li.correct {
-      background-color: #2ecc71;
+      background-color: #15ff00;
     }
 
     .options li.wrong {
@@ -825,7 +825,7 @@
 
         ];
 
-    const questionsSection = document.getElementById("questions-section");
+   const questionsSection = document.getElementById("questions-section");
 
     function loadQuestions() {
       let totalMarks = questions.length * 4;
@@ -913,7 +913,7 @@
     function viewSolution() {
       const popup = document.getElementById("popup");
       const iframe = popup.querySelector("iframe");
-      iframe.src = "comingsoon.html";
+      iframe.src = "";
       popup.style.display = "block";
     }
 
@@ -922,6 +922,144 @@
     }
 
     loadQuestions();
+
+
+
+
+
+
+
+
+
+document.querySelector(".submit-btn").addEventListener("click", function(event) {
+  event.preventDefault();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const submitButtons = document.querySelectorAll(".submit-btn");
+  submitButtons.forEach((button) => {
+    button.addEventListener("click", openPopup);
+  });
+});
+
+function openPopup() {
+  // Blur content except the popup
+  const content = document.querySelectorAll("body > *:not(#popup)");
+  content.forEach((element) => {
+    element.style.filter = "blur(5px)";
+    element.style.pointerEvents = "none";
+  });
+
+  // Create or select popup element
+  let popup = document.getElementById("popup");
+  if (!popup) {
+    popup = document.createElement("div");
+    popup.id = "popup";
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+    popup.style.width = "90%";
+    popup.style.maxWidth = "500px";
+    popup.style.height = "80%";
+    popup.style.backgroundColor = "white";
+    popup.style.borderRadius = "8px";
+    popup.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    popup.style.padding = "20px";
+    popup.style.textAlign = "center";
+    popup.style.zIndex = "1000";
+    popup.style.overflowY = "auto"; // Enable vertical scrolling for overflow content
+    popup.style.display = "none";
+    document.body.appendChild(popup);
+  }
+
+  // Clear existing popup content
+  popup.innerHTML = "";
+
+  // Add timer heading
+const timerHeading = document.createElement("h2");
+timerHeading.id = "popup-heading";
+timerHeading.style.marginBottom = "20px";
+timerHeading.style.color = "#FF5733"; // Change this color code to your desired color
+popup.appendChild(timerHeading);
+
+
+  // Add iframe for links
+  const iframe = document.createElement("iframe");
+  iframe.style.width = "100%";
+  iframe.style.height = "calc(100% - 80px)"; // Adjust height to fit inside the popup with some space for heading and button
+  iframe.style.border = "none";
+  popup.appendChild(iframe);
+
+  // Add close button
+  const closeButton = document.createElement("button");
+  closeButton.id = "popup-close-button";
+  closeButton.style.display = "none";
+  closeButton.style.marginTop = "10px";
+  closeButton.style.padding = "10px 20px";
+  closeButton.style.backgroundColor = "#007bff";
+  closeButton.style.color = "white";
+  closeButton.style.border = "none";
+  closeButton.style.borderRadius = "5px";
+  closeButton.style.cursor = "pointer";
+  closeButton.innerText = "Close";
+  closeButton.onclick = closePopup;
+  popup.appendChild(closeButton);
+
+  // Set random iframe link
+  const links = [
+    "https://anzaaneducation.blogspot.com/2024/12/IntroductiontoAlgebra%20.html",
+    "https://anzaaneducation.blogspot.com/2024/12/UnderstandingtheLanguageofAlgebra.html",
+    "https://anzaaneducation.blogspot.com/2024/12/PatternsinAlgebra.html",
+    "https://anzaaneducation.blogspot.com/2024/12/AdvancedTechniquesforSolvingEquations.html",
+    "https://anzaaneducation.blogspot.com/2024/12/advanced-concepts-in-graphing-linear-Equations.html",
+  ];
+  iframe.src = links[Math.floor(Math.random() * links.length)];
+
+  // Show popup
+  popup.style.display = "block";
+
+  // Timer functionality
+  let timer = 20;
+  const intervalId = setInterval(() => {
+    timerHeading.innerText = `Your Result is Calculating... (${timer} seconds remaining)`;
+    timer--;
+    if (timer < 0) {
+      clearInterval(intervalId);
+      timerHeading.style.display = "none";
+      closeButton.style.display = "block";
+    }
+  }, 1000);
+}
+
+function closePopup() {
+  const popup = document.getElementById("popup");
+  const content = document.querySelectorAll("body > *:not(#popup)");
+
+  if (popup) popup.style.display = "none";
+
+  // Remove blur from the rest of the page
+  content.forEach((element) => {
+    element.style.filter = "none";
+    element.style.pointerEvents = "auto";
+  });
+}
+
+
   </script>
 </body>
 
